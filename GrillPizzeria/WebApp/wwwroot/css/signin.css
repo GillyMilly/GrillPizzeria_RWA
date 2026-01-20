@@ -1,0 +1,122 @@
+/* Image 5 - Login stranica: Split layout with visual on left, form on right */
+.signin-page-container {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.signin-visual-section {
+    flex: 0 0 40%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.signin-visual-content {
+    text-align: center;
+    color: white;
+}
+
+.signin-visual-content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.signin-visual-content p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+.signin-form-section {
+    flex: 0 0 60%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background-color: #ffffff;
+}
+
+.signin-form-container {
+    width: 100%;
+    max-width: 400px;
+}
+
+.signin-form-container h2 {
+    margin-bottom: 2rem;
+    color: #333;
+    text-align: center;
+}
+
+.signin-form-container .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.signin-form-container label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #555;
+    font-weight: 500;
+}
+
+.signin-form-container input[type="text"],
+.signin-form-container input[type="password"] {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.signin-form-container input[type="text"]:focus,
+.signin-form-container input[type="password"]:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.signin-form-container .btn-login {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #667eea;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.signin-form-container .btn-login:hover {
+    background-color: #5568d3;
+}
+
+.signin-register-link {
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+.signin-register-link a {
+    color: #667eea;
+    text-decoration: none;
+}
+
+.signin-register-link a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .signin-page-container {
+        flex-direction: column;
+    }
+    
+    .signin-visual-section {
+        flex: 0 0 30%;
+    }
+    
+    .signin-form-section {
+        flex: 0 0 70%;
+    }
+}

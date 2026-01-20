@@ -1,0 +1,37 @@
+@model WebApp.ViewModels.KategorijaHraneVM
+
+@{
+    ViewData["Title"] = "Uredi kategoriju";
+}
+<link rel="stylesheet" href="~/css/kategorija-alergen.css" asp-append-version="true" />
+
+<div class="entity-form-container">
+    <div class="entity-form-content">
+        <div class="entity-form-header">
+            <h1>Uredi kategoriju hrane</h1>
+        </div>
+
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="IdkategorijaHrane" />
+            <div class="entity-form-group">
+                <label asp-for="Naziv">Name:</label>
+                <input asp-for="Naziv" type="text" />
+                <span asp-validation-for="Naziv" class="text-danger"></span>
+            </div>
+            <div class="entity-form-group">
+                <label asp-for="Opis">Description:</label>
+                <textarea asp-for="Opis"></textarea>
+                <span asp-validation-for="Opis" class="text-danger"></span>
+            </div>
+            <div class="entity-form-actions">
+                <a asp-action="Index" class="btn-cancel">Cancel</a>
+                <button type="submit" class="btn-save">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

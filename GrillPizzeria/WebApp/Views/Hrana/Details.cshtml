@@ -1,0 +1,96 @@
+@model WebApp.ViewModels.HranaVM
+
+@{
+    ViewData["Title"] = "Detalji hrane";
+    var isAdmin = User.IsInRole("Admin");
+}
+<link rel="stylesheet" href="~/css/hrana.css" asp-append-version="true" />
+
+<div class="food-details-container">
+    <div class="food-details-content">
+        <div class="food-details-header">
+            <div class="food-category">@Html.DisplayFor(model => model.KategorijaNaziv)</div>
+            <div class="food-title">@Html.DisplayFor(model => model.Naslov)</div>
+        </div>
+
+        <div class="food-details-main">
+            <!-- Image Section (Left) -->
+            <div class="food-image-section">
+                <div class="food-main-image">
+                    <span>📷 Slika hrane</span>
+                </div>
+                <div class="food-thumbnails">
+                    <div class="food-thumbnail">📷</div>
+                    <div class="food-thumbnail">📷</div>
+                    <div class="food-thumbnail">📷</div>
+                </div>
+            </div>
+
+            <!-- Info Box (Right) -->
+            <div class="food-info-box">
+                <div class="food-info-item">
+                    <div class="food-info-label">Price:</div>
+                    <div class="food-info-value">@Html.DisplayFor(model => model.Cijena)</div>
+                </div>
+                <div class="food-info-item">
+                    <div class="food-info-label">Category:</div>
+                    <div class="food-info-value">@Html.DisplayFor(model => model.KategorijaNaziv)</div>
+                </div>
+                @if (Model.AlergeniNazivi != null && Model.AlergeniNazivi.Any())
+                {
+                    <div class="food-info-item">
+                        <div class="food-info-label">Allergens:</div>
+                        <div class="food-info-value">@string.Join(", ", Model.AlergeniNazivi)</div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Tabbed Section (Image 9) -->
+        <div class="food-tabs-section">
+            <div class="food-tabs">
+                <button class="food-tab active" onclick="showTab('description')">Description</button>
+                <button class="food-tab" onclick="showTab('specifications')">Specifications</button>
+            </div>
+            <div id="description" class="food-tab-content">
+                <p>@(Model.Opis ?? "Nema opisa.")</p>
+            </div>
+            <div id="specifications" class="food-tab-content" style="display: none;">
+                <p><strong>Kategorija:</strong> @Html.DisplayFor(model => model.KategorijaNaziv)</p>
+                <p><strong>Cijena:</strong> @Html.DisplayFor(model => model.Cijena)</p>
+                @if (Model.AlergeniNazivi != null && Model.AlergeniNazivi.Any())
+                {
+                    <p><strong>Alergeni:</strong> @string.Join(", ", Model.AlergeniNazivi)</p>
+                }
+            </div>
+        </div>
+
+        <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+            @if (isAdmin)
+            {
+                <a asp-action="Edit" asp-route-id="@Model.Idhrana" class="btn btn-warning">Uredi</a>
+            }
+            <a asp-action="Search" class="btn btn-outline-secondary">Natrag</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showTab(tabName) {
+        // Hide all tab contents
+        document.querySelectorAll('.food-tab-content').forEach(content => {
+            content.style.display = 'none';
+        });
+        
+        // Remove active class from all tabs
+        document.querySelectorAll('.food-tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        
+        // Show selected tab content
+        document.getElementById(tabName).style.display = 'block';
+        
+        // Add active class to clicked tab
+        event.target.classList.add('active');
+    }
+</script>

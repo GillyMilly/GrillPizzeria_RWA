@@ -1,0 +1,49 @@
+@model WebApp.ViewModels.KorisnikSignInVM
+
+@{
+    ViewData["Title"] = "Prijava";
+    Layout = "_Layout";
+}
+<link rel="stylesheet" href="~/css/signin.css" asp-append-version="true" />
+
+<div class="signin-page-container">
+    <div class="signin-visual-section">
+        <div class="signin-visual-content">
+            <h1>Dobrodošli</h1>
+            <p>Prijavite se za pristup vašem računu</p>
+        </div>
+    </div>
+    <div class="signin-form-section">
+        <div class="signin-form-container">
+            <h2>Prijava</h2>
+            <form asp-action="SignIn">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="EmailOrUsername">Username:</label>
+                    <input asp-for="EmailOrUsername" type="text" placeholder="Unesite username ili email" />
+                    <span asp-validation-for="EmailOrUsername" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password">Password:</label>
+                    <input type="password" asp-for="Password" placeholder="Unesite lozinku" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <div class="form-check">
+                        <input asp-for="RememberMe" class="form-check-input" />
+                        <label asp-for="RememberMe" class="form-check-label">Zapamti me</label>
+                    </div>
+                </div>
+                <input type="hidden" asp-for="ReturnUrl" />
+                <button type="submit" class="btn-login">Login</button>
+            </form>
+            <div class="signin-register-link">
+                <a asp-action="Register">Nemaš račun? Registriraj se ovdje</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

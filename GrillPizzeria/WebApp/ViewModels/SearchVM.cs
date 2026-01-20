@@ -18,4 +18,8 @@ public class SearchVM
     [Range(1, int.MaxValue, ErrorMessage = "Stranica mora biti veća od 0.")]
     [Display(Name = "Stranica")]
     public int Page { get; set; } = 1;
+
+    public List<HranaVM>? Hranas { get; set; }
+    public int TotalCount { get; set; }
+    public int LastPage { get; set; }
 }

@@ -1,0 +1,123 @@
+/* Similar to signin but for registration */
+.register-page-container {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.register-visual-section {
+    flex: 0 0 40%;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.register-visual-content {
+    text-align: center;
+    color: white;
+}
+
+.register-visual-content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.register-visual-content p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+.register-form-section {
+    flex: 0 0 60%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background-color: #ffffff;
+}
+
+.register-form-container {
+    width: 100%;
+    max-width: 500px;
+}
+
+.register-form-container h2 {
+    margin-bottom: 2rem;
+    color: #333;
+    text-align: center;
+}
+
+.register-form-container .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.register-form-container label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #555;
+    font-weight: 500;
+}
+
+.register-form-container input[type="text"],
+.register-form-container input[type="email"],
+.register-form-container input[type="password"],
+.register-form-container input[type="tel"] {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.register-form-container input:focus {
+    outline: none;
+    border-color: #f5576c;
+    box-shadow: 0 0 0 3px rgba(245, 87, 108, 0.1);
+}
+
+.register-form-container .btn-register {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #f5576c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.register-form-container .btn-register:hover {
+    background-color: #e0455a;
+}
+
+.register-signin-link {
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+.register-signin-link a {
+    color: #f5576c;
+    text-decoration: none;
+}
+
+.register-signin-link a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .register-page-container {
+        flex-direction: column;
+    }
+    
+    .register-visual-section {
+        flex: 0 0 30%;
+    }
+    
+    .register-form-section {
+        flex: 0 0 70%;
+    }
+}

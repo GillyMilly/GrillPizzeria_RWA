@@ -155,3 +155,7 @@ INSERT INTO HranaAlergen (HranaId, AlergenId) VALUES
 (16, 1), (16, 2), -- Cheeseburger
 (17, 1), (17, 2), -- Bacon burger
 (19, 1)           -- Classic burger
+
+   --UPDATE Korisnik 
+   --SET RolesId = (SELECT RolesId FROM Roles WHERE RolesName = 'Admin') 
+   --WHERE Username = 'admin';

@@ -1,0 +1,31 @@
+@model WebApp.ViewModels.AlergenVM
+
+@{
+    ViewData["Title"] = "Dodaj alergen";
+}
+<link rel="stylesheet" href="~/css/kategorija-alergen.css" asp-append-version="true" />
+
+<div class="entity-form-container">
+    <div class="entity-form-content">
+        <div class="entity-form-header">
+            <h1>Dodaj alergen</h1>
+        </div>
+
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="entity-form-group">
+                <label asp-for="Naziv">Name:</label>
+                <input asp-for="Naziv" type="text" />
+                <span asp-validation-for="Naziv" class="text-danger"></span>
+            </div>
+            <div class="entity-form-actions">
+                <a asp-action="Index" class="btn-cancel">Cancel</a>
+                <button type="submit" class="btn-save">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

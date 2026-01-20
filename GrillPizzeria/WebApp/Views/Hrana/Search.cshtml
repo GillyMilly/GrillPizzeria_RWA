@@ -1,0 +1,102 @@
+@model WebApp.ViewModels.SearchVM
+
+@{
+    ViewData["Title"] = "Ponuda hrane";
+    var isAdmin = User.IsInRole("Admin");
+}
+<link rel="stylesheet" href="~/css/hrana.css" asp-append-version="true" />
+
+<div class="food-list-container">
+    <div class="food-list-header">
+        <h1>Ponuda hrane</h1>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+
+    <!-- Search and Filter Section (Image 7-8) -->
+    <div class="search-filter-section">
+        <form asp-action="Search" method="get">
+            <div class="search-filter-row">
+                <div class="search-input-group">
+                    <label asp-for="SearchTerm">Search text</label>
+                    <input asp-for="SearchTerm" type="text" placeholder="Pretraži hranu..." />
+                </div>
+                <div class="filter-group">
+                    <label asp-for="KategorijaId">Category</label>
+                    <select asp-for="KategorijaId" asp-items="ViewBag.Categories">
+                        <option value="">Sve kategorije</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-search">Search</button>
+            </div>
+        </form>
+    </div>
+
+    @if (isAdmin)
+    {
+        <div style="margin-bottom: 1.5rem;">
+            <a asp-action="Create" class="btn-add-item">Add Item</a>
+        </div>
+    }
+
+    @if (Model.Hranas != null && Model.Hranas.Any())
+    {
+        <!-- List View (Image 7 - Variant 1) -->
+        <div class="food-list-view">
+            <div class="list-controls" style="margin-bottom: 1rem;">
+                <div class="items-per-page">
+                    <label>Show</label>
+                    <select onchange="this.form.submit()" name="PageSize">
+                        <option value="10" selected="@(Model.PageSize == 10)">10</option>
+                        <option value="25" selected="@(Model.PageSize == 25)">25</option>
+                        <option value="50" selected="@(Model.PageSize == 50)">50</option>
+                    </select>
+                    <label>Items</label>
+                </div>
+            </div>
+
+            @foreach (var item in Model.Hranas)
+            {
+                <div class="food-list-item" onclick="window.location.href='@Url.Action("Details", "Hrana", new { id = item.Idhrana })'">
+                    <div class="food-item-info">
+                        <div class="food-item-name">@Html.DisplayFor(modelItem => item.Naslov)</div>
+                        <div class="food-item-details">
+                            @Html.DisplayFor(modelItem => item.Cijena) | @Html.DisplayFor(modelItem => item.KategorijaNaziv)
+                        </div>
+                    </div>
+                    <div class="food-item-actions">
+                        @if (isAdmin)
+                        {
+                            <button type="button" class="btn-delete-item" onclick="event.stopPropagation(); window.location.href='@Url.Action("Delete", "Hrana", new { id = item.Idhrana })'" title="Obriši">🗑️</button>
+                        }
+                    </div>
+                </div>
+            }
+
+            @if (Model.LastPage > 1)
+            {
+                <div class="list-controls">
+                    <nav>
+                        <ul class="pagination">
+                            @for (int i = 1; i <= Model.LastPage; i++)
+                            {
+                                <li class="page-item @(i == Model.Page ? "active" : "")">
+                                    <a class="page-link" asp-action="Search" asp-route-page="@i" asp-route-searchTerm="@Model.SearchTerm" asp-route-kategorijaId="@Model.KategorijaId">@i</a>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="food-list-view">
+            <p style="text-align: center; padding: 2rem; color: #666;">Nema pronađenih rezultata.</p>
+        </div>
+    }
+</div>

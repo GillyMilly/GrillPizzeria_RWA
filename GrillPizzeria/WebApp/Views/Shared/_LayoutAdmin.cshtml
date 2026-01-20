@@ -1,17 +1,28 @@
+@{
+    var user = this.ViewContext.HttpContext.User;
+    bool loggedIn = false;
+    string username = "";
+    if (user != null && !string.IsNullOrEmpty(user.Identity?.Name))
+    {
+        loggedIn = true;
+        username = user.Identity.Name;
+    }
+}
 <!DOCTYPE html>
 <html lang="hr">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - GrillPizzeria</title>
+    <title>@ViewData["Title"] | Admin Panel</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/layoutadmin.css" asp-append-version="true" />
 </head>
 <body style="display: flex; flex-direction: column; min-height: 100vh;">
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #343a40;">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
             <div class="container">
-                <a class="navbar-brand" asp-controller="Home" asp-action="Index">GrillPizzeria</a>
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">Admin Panel</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -21,25 +32,36 @@
                         <li class="nav-item"><a class="nav-link" asp-controller="Hrana" asp-action="Search">Hrana</a></li>
                         <li class="nav-item"><a class="nav-link" asp-controller="KategorijaHrane" asp-action="Index">Kategorije</a></li>
                         <li class="nav-item"><a class="nav-link" asp-controller="Alergen" asp-action="Index">Alergeni</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Log" asp-action="Index">Logovi</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Korisnik" asp-action="KorisnikDetails">Profil</a></li>
                     </ul>
                     <ul class="navbar-nav">
-                        <li class="nav-item"><a class="nav-link" asp-controller="Korisnik" asp-action="SignIn">Prijava</a></li>
+                        @if (!loggedIn)
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="Korisnik" asp-action="SignIn">Prijava</a></li>
+                        }
+                        else
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="Korisnik" asp-action="SignOut">Odjava (@username)</a></li>
+                        }
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
+
     <div class="container" style="flex: 1;">
         <main role="main" class="pb-4">
             @RenderBody()
         </main>
     </div>
 
-    <footer style="background-color: #f8f9fa; padding: 20px; text-align: center; margin-top: auto; border-top: 1px solid #dee2e6;">
-        <div class="container">
-            <p style="margin: 0; color: #6c757d;">Footer text etc...</p>
+    <footer class="footer">
+        <div class="container text-center">
+            <p>&copy; 2024 GrillPizzeria | Admin Panel</p>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

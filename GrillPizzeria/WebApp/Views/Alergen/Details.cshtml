@@ -1,0 +1,28 @@
+@model WebApp.ViewModels.AlergenVM
+
+@{
+    ViewData["Title"] = "Detalji alergena";
+    var isAdmin = User.IsInRole("Admin");
+}
+<link rel="stylesheet" href="~/css/kategorija-alergen.css" asp-append-version="true" />
+
+<div class="entity-details-container">
+    <div class="entity-details-content">
+        <div class="entity-details-header">
+            <h1>Detalji alergena</h1>
+        </div>
+
+        <div class="entity-details-item">
+            <div class="entity-details-label">@Html.DisplayNameFor(model => model.Naziv)</div>
+            <div class="entity-details-value">@Html.DisplayFor(model => model.Naziv)</div>
+        </div>
+
+        <div class="entity-details-actions">
+            @if (isAdmin)
+            {
+                <a asp-action="Edit" asp-route-id="@Model.Idalergen" class="btn btn-warning">Uredi</a>
+            }
+            <a asp-action="Index" class="btn btn-outline-secondary">Natrag na listu</a>
+        </div>
+    </div>
+</div>

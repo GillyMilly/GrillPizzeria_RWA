@@ -1,0 +1,38 @@
+@model WebApp.ViewModels.HranaVM
+
+@{
+    ViewData["Title"] = "Obriši hranu";
+}
+<link rel="stylesheet" href="~/css/hrana.css" asp-append-version="true" />
+
+<div class="delete-container">
+    <div class="delete-content">
+        <div class="delete-header">
+            <h1>Obriši hranu</h1>
+            <h3>Jeste li sigurni da želite obrisati ovu hranu?</h3>
+        </div>
+
+        <div class="delete-details">
+            <div class="delete-details-item">
+                <div class="delete-details-label">@Html.DisplayNameFor(model => model.Naslov)</div>
+                <div class="delete-details-value">@Html.DisplayFor(model => model.Naslov)</div>
+            </div>
+            <div class="delete-details-item">
+                <div class="delete-details-label">@Html.DisplayNameFor(model => model.Cijena)</div>
+                <div class="delete-details-value">@Html.DisplayFor(model => model.Cijena)</div>
+            </div>
+            <div class="delete-details-item">
+                <div class="delete-details-label">@Html.DisplayNameFor(model => model.KategorijaNaziv)</div>
+                <div class="delete-details-value">@Html.DisplayFor(model => model.KategorijaNaziv)</div>
+            </div>
+        </div>
+
+        <form asp-action="Delete" method="post">
+            <input type="hidden" asp-for="Idhrana" />
+            <div class="delete-actions">
+                <a asp-action="Search" class="btn-cancel">Cancel</a>
+                <button type="submit" class="btn-delete">Obriši</button>
+            </div>
+        </form>
+    </div>
+</div>

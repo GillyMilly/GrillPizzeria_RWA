@@ -1,0 +1,171 @@
+/* Image 2 - Stranica s popisom logova */
+.log-list-container {
+    padding: 2rem;
+    min-height: calc(100vh - 200px);
+}
+
+.log-list-header {
+    margin-bottom: 2rem;
+}
+
+.log-list-header h1 {
+    color: #333;
+    font-size: 2rem;
+}
+
+.log-list-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.log-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.items-per-page {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.items-per-page label {
+    color: #555;
+    font-weight: 500;
+}
+
+.items-per-page select {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.log-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.log-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.2s;
+}
+
+.log-item:hover {
+    background-color: #f8f9fa;
+}
+
+.log-bullet {
+    width: 8px;
+    height: 8px;
+    background-color: #6c757d;
+    border-radius: 50%;
+    margin-right: 1rem;
+    margin-top: 0.5rem;
+    flex-shrink: 0;
+}
+
+.log-content {
+    flex: 1;
+}
+
+.log-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.log-level {
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.log-level-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+.log-level-warning {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.log-level-error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.log-level-debug {
+    background-color: #e2e3e5;
+    color: #383d41;
+}
+
+.log-timestamp {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.log-message {
+    color: #333;
+    line-height: 1.5;
+}
+
+.no-logs {
+    text-align: center;
+    padding: 3rem;
+    color: #6c757d;
+    font-size: 1.1rem;
+}
+
+.log-pagination {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #dee2e6;
+}
+
+.pagination {
+    display: flex;
+    gap: 0.5rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    justify-content: center;
+}
+
+.pagination .page-item {
+    display: inline-block;
+}
+
+.pagination .page-link {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    color: #007bff;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.pagination .page-link:hover {
+    background-color: #e9ecef;
+}

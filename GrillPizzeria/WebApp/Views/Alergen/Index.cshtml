@@ -1,0 +1,51 @@
+@model IEnumerable<WebApp.ViewModels.AlergenVM>
+
+@{
+    ViewData["Title"] = "Alergeni";
+    var isAdmin = User.IsInRole("Admin");
+}
+<link rel="stylesheet" href="~/css/kategorija-alergen.css" asp-append-version="true" />
+
+<div class="entity-list-container">
+    <div class="entity-list-header">
+        <h1>Alergeni</h1>
+        @if (isAdmin)
+        {
+            <a asp-action="Create" class="btn btn-success">Dodaj alergen</a>
+        }
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+
+    <div class="entity-list-content">
+        <table class="entity-table">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.Naziv)</th>
+                    <th>Akcije</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.Naziv)</td>
+                        <td>
+                            <div class="entity-actions">
+                                <a asp-action="Details" asp-route-id="@item.Idalergen" class="btn btn-info btn-sm">Detalji</a>
+                                @if (isAdmin)
+                                {
+                                    <a asp-action="Edit" asp-route-id="@item.Idalergen" class="btn btn-warning btn-sm">Uredi</a>
+                                    <a asp-action="Delete" asp-route-id="@item.Idalergen" class="btn btn-danger btn-sm">Obriši</a>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

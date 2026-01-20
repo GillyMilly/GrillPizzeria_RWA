@@ -1,0 +1,50 @@
+@model WebApp.ViewModels.KorisnikVM
+
+@{
+    ViewData["Title"] = "Moj profil";
+}
+<link rel="stylesheet" href="~/css/profil.css" asp-append-version="true" />
+
+<div class="profile-container">
+    <div class="profile-content">
+        <div class="profile-header">
+            <h1>Moj profil</h1>
+        </div>
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+        }
+
+        <div class="profile-form">
+            <div class="profile-form-group">
+                <label>Username:</label>
+                <input type="text" value="@Model.Username" readonly />
+            </div>
+            <div class="profile-form-group">
+                <label>E-mail:</label>
+                <input type="email" value="@Model.Email" readonly />
+            </div>
+            <div class="profile-form-group">
+                <label>First Name:</label>
+                <input type="text" value="@Model.Ime" readonly />
+            </div>
+            <div class="profile-form-group">
+                <label>Last Name:</label>
+                <input type="text" value="@Model.Prezime" readonly />
+            </div>
+            <div class="profile-form-group">
+                <label>Phone:</label>
+                <input type="tel" value="@Model.Mobitel" readonly />
+            </div>
+            <div class="profile-form-group">
+                <label>Role:</label>
+                <input type="text" value="@Model.RoleName" readonly />
+            </div>
+        </div>
+
+        <div class="profile-form-actions">
+            <a asp-action="KorisnikEdit" asp-route-id="@Model.Idkorisnik" class="profile-btn-save">Uredi profil</a>
+        </div>
+    </div>
+</div>

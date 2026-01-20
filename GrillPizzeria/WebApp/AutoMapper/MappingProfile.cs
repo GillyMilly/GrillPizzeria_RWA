@@ -26,5 +26,8 @@ public class MappingProfile : Profile
 
         CreateMap<Alergen, AlergenVM>()
             .ReverseMap();
+
+        CreateMap<Log, LogVM>()
+            .ReverseMap();
     }
 }
