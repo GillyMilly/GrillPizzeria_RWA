@@ -1,0 +1,6 @@
+@GPWebAPI_HostAddress = http://localhost:5225
+
+GET {{GPWebAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
