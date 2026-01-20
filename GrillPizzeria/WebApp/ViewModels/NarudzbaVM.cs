@@ -20,6 +20,6 @@ public class NarudzbaVM
     public List<NarudzbaHranaVM>? NarudzbaHranas { get; set; }
 
     [Display(Name = "Ukupna cijena")]
-    [DisplayFormat(DataFormatString = "{0:F2} HRK")]
+    [DisplayFormat(DataFormatString = "{0:C}")]
     public decimal? UkupnaCijena { get; set; }
 }

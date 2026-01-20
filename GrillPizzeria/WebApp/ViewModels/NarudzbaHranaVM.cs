@@ -22,10 +22,10 @@ public class NarudzbaHranaVM
     public string? HranaNaslov { get; set; }
 
     [Display(Name = "Cijena po komadu")]
-    [DisplayFormat(DataFormatString = "{0:F2} HRK")]
+    [DisplayFormat(DataFormatString = "{0:C}")]
     public decimal? HranaCijena { get; set; }
 
     [Display(Name = "Ukupna cijena")]
-    [DisplayFormat(DataFormatString = "{0:F2} HRK")]
+    [DisplayFormat(DataFormatString = "{0:C}")]
     public decimal? UkupnaCijena { get; set; }
 }

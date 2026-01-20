@@ -17,7 +17,7 @@ public class HranaVM
     public string? Opis { get; set; }
 
     [Range(0.01, 9999.99, ErrorMessage = "Cijena mora biti između 0.01 i 9999.99.")]
-    [DisplayFormat(DataFormatString = "{0:F2} HRK", ApplyFormatInEditMode = true)]
+    [DisplayFormat(DataFormatString = "{0:C}", ApplyFormatInEditMode = true)]
     [Display(Name = "Cijena")]
     public decimal? Cijena { get; set; }
 
