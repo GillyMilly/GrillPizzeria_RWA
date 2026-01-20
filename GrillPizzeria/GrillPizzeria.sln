@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36414.22 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GPWebAPI", "GPWebAPI\GPWebAPI.csproj", "{DB422ECA-F8BC-4FBF-B7A8-A6831BFB2930}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI", "GPWebAPI\WebAPI.csproj", "{DB422ECA-F8BC-4FBF-B7A8-A6831BFB2930}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp", "WebApp\WebApp.csproj", "{8CE48F99-1DAE-412D-9BC2-C3FDE06A0B83}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassLibrary", "ClassLibrary\ClassLibrary.csproj", "{236A4E25-5138-4D2B-ADD3-F5A9220E6741}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{DB422ECA-F8BC-4FBF-B7A8-A6831BFB2930}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB422ECA-F8BC-4FBF-B7A8-A6831BFB2930}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB422ECA-F8BC-4FBF-B7A8-A6831BFB2930}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CE48F99-1DAE-412D-9BC2-C3FDE06A0B83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CE48F99-1DAE-412D-9BC2-C3FDE06A0B83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CE48F99-1DAE-412D-9BC2-C3FDE06A0B83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CE48F99-1DAE-412D-9BC2-C3FDE06A0B83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{236A4E25-5138-4D2B-ADD3-F5A9220E6741}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{236A4E25-5138-4D2B-ADD3-F5A9220E6741}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{236A4E25-5138-4D2B-ADD3-F5A9220E6741}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{236A4E25-5138-4D2B-ADD3-F5A9220E6741}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
