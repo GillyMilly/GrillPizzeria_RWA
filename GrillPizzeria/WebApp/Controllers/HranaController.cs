@@ -2,6 +2,7 @@ using AutoMapper;
 using ClassLibrary.Models;
 using ClassLibrary.Repositories;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,12 +16,16 @@ public class HranaController : Controller
     private readonly HranaRepository _hranaRepository;
     private readonly IMapper _mapper;
     private readonly GrillPizzeriaDbContext _context;
+    private readonly IWebHostEnvironment _environment;
+    private readonly LogRepository _logRepository;
 
-    public HranaController(HranaRepository hranaRepository, IMapper mapper, GrillPizzeriaDbContext context)
+    public HranaController(HranaRepository hranaRepository, IMapper mapper, GrillPizzeriaDbContext context, IWebHostEnvironment environment, LogRepository logRepository)
     {
         _hranaRepository = hranaRepository;
         _mapper = mapper;
         _context = context;
+        _environment = environment;
+        _logRepository = logRepository;
     }
 
     private List<SelectListItem> GetCategoryListItems()
@@ -138,7 +143,7 @@ public class HranaController : Controller
     [Authorize(Roles = "Admin")]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Create(HranaVM foodVm)
+    public async Task<ActionResult> Create(HranaVM foodVm, IFormFile? imageFile)
     {
         try
         {
@@ -147,6 +152,26 @@ public class HranaController : Controller
                 ViewBag.CategoryDdlItems = GetCategoryListItems();
                 foodVm.AlergeniDdl = GetAlergenListItems();
                 return View(foodVm);
+            }
+
+            // Handle image upload
+            if (imageFile != null && imageFile.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(_environment.WebRootPath, "images", "hrana");
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                var uniqueFileName = Guid.NewGuid().ToString() + "_" + imageFile.FileName;
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await imageFile.CopyToAsync(fileStream);
+                }
+
+                foodVm.SlikaUrl = $"/images/hrana/{uniqueFileName}";
             }
 
             var newFood = _mapper.Map<Hrana>(foodVm);
@@ -162,6 +187,14 @@ public class HranaController : Controller
                 });
             }
             _context.SaveChanges();
+
+            // Log action
+            await _logRepository.AddLogAsync(new Log
+            {
+                Timestamp = DateTime.UtcNow,
+                Level = "Info",
+                Message = $"Hrana '{newFood.Naslov}' je kreirana (ID: {newFood.Idhrana})"
+            });
 
             TempData["SuccessMessage"] = $"Hrana '{newFood.Naslov}' je uspješno kreirana.";
             return RedirectToAction("Search");
@@ -207,7 +240,7 @@ public class HranaController : Controller
     [Authorize(Roles = "Admin")]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Edit(int id, HranaVM vm)
+    public async Task<ActionResult> Edit(int id, HranaVM vm, IFormFile? imageFile)
     {
         try
         {
@@ -221,6 +254,60 @@ public class HranaController : Controller
             var hrana = _context.Hranas.FirstOrDefault(h => h.Idhrana == id);
             if (hrana == null)
                 return NotFound();
+
+            // Preserve existing values if not provided or empty in the form
+            // This prevents overwriting existing data when only updating image
+            if (!vm.Cijena.HasValue || vm.Cijena.Value == 0)
+            {
+                vm.Cijena = hrana.Cijena;
+            }
+            if (string.IsNullOrWhiteSpace(vm.Naslov))
+            {
+                vm.Naslov = hrana.Naslov;
+            }
+            if (string.IsNullOrWhiteSpace(vm.Opis))
+            {
+                vm.Opis = hrana.Opis;
+            }
+            if (!vm.KategorijaHraneId.HasValue)
+            {
+                vm.KategorijaHraneId = hrana.KategorijaHraneId;
+            }
+
+            // Handle image upload
+            if (imageFile != null && imageFile.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(_environment.WebRootPath, "images", "hrana");
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                // Delete old image if exists
+                if (!string.IsNullOrEmpty(hrana.SlikaUrl))
+                {
+                    var oldImagePath = Path.Combine(_environment.WebRootPath, hrana.SlikaUrl.TrimStart('/'));
+                    if (System.IO.File.Exists(oldImagePath))
+                    {
+                        System.IO.File.Delete(oldImagePath);
+                    }
+                }
+
+                var uniqueFileName = Guid.NewGuid().ToString() + "_" + imageFile.FileName;
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await imageFile.CopyToAsync(fileStream);
+                }
+
+                vm.SlikaUrl = $"/images/hrana/{uniqueFileName}";
+            }
+            else
+            {
+                // Keep existing image if no new file uploaded
+                vm.SlikaUrl = hrana.SlikaUrl;
+            }
 
             _mapper.Map(vm, hrana);
             _context.SaveChanges();
@@ -237,6 +324,14 @@ public class HranaController : Controller
                 });
             }
             _context.SaveChanges();
+
+            // Log action
+            await _logRepository.AddLogAsync(new Log
+            {
+                Timestamp = DateTime.UtcNow,
+                Level = "Info",
+                Message = $"Hrana '{hrana.Naslov}' je ažurirana (ID: {id})"
+            });
 
             TempData["SuccessMessage"] = "Hrana je uspješno ažurirana.";
             return RedirectToAction("Search");
@@ -274,7 +369,7 @@ public class HranaController : Controller
     [Authorize(Roles = "Admin")]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Delete(int id, HranaVM hranaVM)
+    public async Task<ActionResult> Delete(int id, HranaVM hranaVM)
     {
         try
         {
@@ -282,8 +377,17 @@ public class HranaController : Controller
             if (dbFood == null)
                 return NotFound();
 
+            var foodName = dbFood.Naslov;
             _context.Hranas.Remove(dbFood);
             _context.SaveChanges();
+
+            // Log action
+            await _logRepository.AddLogAsync(new Log
+            {
+                Timestamp = DateTime.UtcNow,
+                Level = "Warning",
+                Message = $"Hrana '{foodName}' je obrisana (ID: {id})"
+            });
 
             TempData["SuccessMessage"] = "Hrana je uspješno obrisana.";
             return RedirectToAction("Search");

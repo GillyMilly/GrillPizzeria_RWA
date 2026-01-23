@@ -18,7 +18,8 @@
 
     <!-- Search and Filter Section (Image 7-8) -->
     <div class="search-filter-section">
-        <form asp-action="Search" method="get">
+        <form asp-action="Search" method="get" id="searchForm">
+            <input type="hidden" asp-for="Page" value="1" />
             <div class="search-filter-row">
                 <div class="search-input-group">
                     <label asp-for="SearchTerm">Search text</label>
@@ -47,15 +48,20 @@
         <!-- List View (Image 7 - Variant 1) -->
         <div class="food-list-view">
             <div class="list-controls" style="margin-bottom: 1rem;">
-                <div class="items-per-page">
-                    <label>Show</label>
-                    <select onchange="this.form.submit()" name="PageSize">
-                        <option value="10" selected="@(Model.PageSize == 10)">10</option>
-                        <option value="25" selected="@(Model.PageSize == 25)">25</option>
-                        <option value="50" selected="@(Model.PageSize == 50)">50</option>
-                    </select>
-                    <label>Items</label>
-                </div>
+                <form asp-action="Search" method="get" id="pageSizeForm">
+                    <input type="hidden" asp-for="SearchTerm" />
+                    <input type="hidden" asp-for="KategorijaId" />
+                    <input type="hidden" asp-for="Page" value="1" />
+                    <div class="items-per-page">
+                        <label>Show</label>
+                        <select name="PageSize" id="pageSizeSelect" onchange="document.getElementById('pageSizeForm').submit();">
+                            <option value="10" selected="@(Model.PageSize == 10)">10</option>
+                            <option value="25" selected="@(Model.PageSize == 25)">25</option>
+                            <option value="50" selected="@(Model.PageSize == 50)">50</option>
+                        </select>
+                        <label>Items</label>
+                    </div>
+                </form>
             </div>
 
             @foreach (var item in Model.Hranas)
@@ -84,7 +90,7 @@
                             @for (int i = 1; i <= Model.LastPage; i++)
                             {
                                 <li class="page-item @(i == Model.Page ? "active" : "")">
-                                    <a class="page-link" asp-action="Search" asp-route-page="@i" asp-route-searchTerm="@Model.SearchTerm" asp-route-kategorijaId="@Model.KategorijaId">@i</a>
+                                    <a class="page-link" asp-action="Search" asp-route-page="@i" asp-route-searchTerm="@Model.SearchTerm" asp-route-kategorijaId="@Model.KategorijaId" asp-route-pageSize="@Model.PageSize">@i</a>
                                 </li>
                             }
                         </ul>

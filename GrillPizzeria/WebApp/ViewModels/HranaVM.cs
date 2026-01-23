@@ -33,4 +33,7 @@ public class HranaVM
 
     [Display(Name = "Alergeni")]
     public List<string>? AlergeniNazivi { get; set; }
+
+    [Display(Name = "Slika")]
+    public string? SlikaUrl { get; set; }
 }

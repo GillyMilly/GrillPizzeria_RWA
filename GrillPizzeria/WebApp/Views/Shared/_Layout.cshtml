@@ -18,9 +18,12 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Početna</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Hrana" asp-action="Search">Hrana</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="KategorijaHrane" asp-action="Index">Kategorije</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Alergen" asp-action="Index">Alergeni</a></li>
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="Hrana" asp-action="Search">Hrana</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="KategorijaHrane" asp-action="Index">Kategorije</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Alergen" asp-action="Index">Alergeni</a></li>
+                        }
                     </ul>
                     <ul class="navbar-nav">
                         <li class="nav-item"><a class="nav-link" asp-controller="Korisnik" asp-action="SignIn">Prijava</a></li>
@@ -37,7 +40,7 @@
 
     <footer style="background-color: #f8f9fa; padding: 20px; text-align: center; margin-top: auto; border-top: 1px solid #dee2e6;">
         <div class="container">
-            <p style="margin: 0; color: #6c757d;">Footer text etc...</p>
+            <p style="margin: 0; color: #6c757d;"> Visoko Sveučilište Algebra</p>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

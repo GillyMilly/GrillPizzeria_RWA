@@ -57,6 +57,7 @@ public partial class GrillPizzeriaDbContext : DbContext
             entity.Property(e => e.Cijena).HasColumnType("decimal(10, 2)");
             entity.Property(e => e.Naslov).HasMaxLength(100);
             entity.Property(e => e.Opis).HasMaxLength(255);
+            entity.Property(e => e.SlikaUrl).HasMaxLength(500);
 
             entity.HasOne(d => d.KategorijaHrane).WithMany(p => p.Hranas)
                 .HasForeignKey(d => d.KategorijaHraneId)

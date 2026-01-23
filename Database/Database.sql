@@ -32,6 +32,7 @@ CREATE TABLE Hrana (
     Opis NVARCHAR(255),
     Cijena DECIMAL(10,2),
     KategorijaHraneId INT,
+	  SlikaUrl NVARCHAR(500) NULL,
     FOREIGN KEY (KategorijaHraneId) REFERENCES KategorijaHrane(IdkategorijaHrane) ON DELETE CASCADE
 )
 
@@ -74,6 +75,13 @@ CREATE TABLE Log (
     Level NVARCHAR(20) NOT NULL,
     Message NVARCHAR(500) NOT NULL
 )
+
+INSERT INTO Log (Timestamp, Level, Message) VALUES
+(GETDATE(), 'Info', 'Aplikacija je pokrenuta'),
+(GETDATE(), 'Warning', 'Test upozorenje'),
+(GETDATE(), 'Error', 'Test greška'),
+(GETDATE(), 'Info', 'Korisnik se prijavio'),
+(GETDATE(), 'Info', 'Hrana je kreirana')
 
 
 -- PODACI

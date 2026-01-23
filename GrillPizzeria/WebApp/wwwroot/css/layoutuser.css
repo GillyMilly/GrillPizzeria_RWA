@@ -8,7 +8,7 @@ body, html {
 
 /* Navbar */
 .navbar {
-    background-color: #dc3545 !important;
+    background-color: #343a40 !important;
     padding: 1rem 0;
 }
 
@@ -32,8 +32,8 @@ body, html {
 
 /* Footer */
 .footer {
-    background-color: #dc3545;
-    color: white;
+    background-color: #f8f9fa;
+    color: #6c757d;
     padding: 20px;
     text-align: center;
     margin-top: auto;

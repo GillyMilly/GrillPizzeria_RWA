@@ -18,12 +18,14 @@ public class KorisnikController : Controller
     private readonly IMapper _mapper;
     private readonly GrillPizzeriaDbContext _context;
     private readonly KorisnikRepository _korisnikRepository;
+    private readonly LogRepository _logRepository;
 
-    public KorisnikController(GrillPizzeriaDbContext context, IMapper mapper, KorisnikRepository korisnikRepository)
+    public KorisnikController(GrillPizzeriaDbContext context, IMapper mapper, KorisnikRepository korisnikRepository, LogRepository logRepository)
     {
         _context = context;
         _mapper = mapper;
         _korisnikRepository = korisnikRepository;
+        _logRepository = logRepository;
     }
 
     public IActionResult Index()
@@ -77,6 +79,14 @@ public class KorisnikController : Controller
             new ClaimsPrincipal(claimsIdentity),
             authProperties);
 
+        // Log action
+        await _logRepository.AddLogAsync(new Log
+        {
+            Timestamp = DateTime.UtcNow,
+            Level = "Info",
+            Message = $"Korisnik '{existingUser.Username}' se prijavio (Role: {existingUser.Roles?.RolesName ?? "User"})"
+        });
+
         if (!string.IsNullOrEmpty(signInVm.ReturnUrl))
             return LocalRedirect(signInVm.ReturnUrl);
         else if (existingUser.Roles?.RolesName == "Admin")
@@ -87,7 +97,17 @@ public class KorisnikController : Controller
 
     public new async Task<IActionResult> SignOut()
     {
+        var username = HttpContext.User.Identity?.Name ?? "Unknown";
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        
+        // Log action
+        await _logRepository.AddLogAsync(new Log
+        {
+            Timestamp = DateTime.UtcNow,
+            Level = "Info",
+            Message = $"Korisnik '{username}' se odjavio"
+        });
+        
         return View();
     }
 
@@ -143,6 +163,14 @@ public class KorisnikController : Controller
             };
 
             await _korisnikRepository.AddKorisnikAsync(korisnik);
+
+            // Log action
+            await _logRepository.AddLogAsync(new Log
+            {
+                Timestamp = DateTime.UtcNow,
+                Level = "Info",
+                Message = $"Novi korisnik '{korisnik.Username}' se registrirao (Email: {korisnik.Email})"
+            });
 
             TempData["SuccessMessage"] = "Registracija je uspješna! Možete se prijaviti.";
             return RedirectToAction("SignIn");

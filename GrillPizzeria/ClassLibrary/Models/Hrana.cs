@@ -15,6 +15,8 @@ public partial class Hrana
 
     public int? KategorijaHraneId { get; set; }
 
+    public string? SlikaUrl { get; set; }
+
     public virtual ICollection<HranaAlergen> HranaAlergens { get; set; } = new List<HranaAlergen>();
 
     public virtual KategorijaHrane? KategorijaHrane { get; set; }
