@@ -1,6 +1,6 @@
 @{
     var user = ViewContext.HttpContext.User;
-    if (user == null || !user.Identity?.IsAuthenticated == true)
+    if (user == null || user.Identity?.IsAuthenticated != true)
     {
         Layout = "_Layout";
     }

@@ -20,12 +20,12 @@ public class LogController : Controller
         _mapper = mapper;
     }
 
-    public async Task<IActionResult> Index(int page = 1, int pageSize = 25)
+    public async Task<IActionResult> Index(int page = 1, int pageSize = 10)
     {
         try
         {
             if (page < 1) page = 1;
-            if (pageSize < 1) pageSize = 25;
+            if (pageSize < 1) pageSize = 10;
 
             var allLogs = await _logRepository.GetAllLogsAsync();
             var totalCount = allLogs.Count;

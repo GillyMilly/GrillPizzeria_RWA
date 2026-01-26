@@ -110,4 +110,36 @@ public class KorisnikController : ControllerBase
             return StatusCode(500, ex.Message);
         }
     }
+
+    [HttpPut("change-role")]
+    public async Task<ActionResult> ChangeRole([FromBody] KorisnikPromoteDto promoteDto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        try
+        {
+            var role = await _context.Roles.FirstOrDefaultAsync(r => r.RolesId == promoteDto.RolesId);
+            if (role == null)
+                return BadRequest($"Uloga s ID {promoteDto.RolesId} nije pronađena.");
+
+            var korisnik = await _korisnikRepository.GetByUsernameAsync(promoteDto.Username);
+            if (korisnik == null)
+                return NotFound($"Korisnik s username '{promoteDto.Username}' nije pronađen.");
+
+            korisnik.RolesId = promoteDto.RolesId;
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                message = $"Uloga korisnika '{promoteDto.Username}' je uspješno promijenjena na '{role.RolesName}'.",
+                username = promoteDto.Username,
+                role = role.RolesName
+            });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
 }

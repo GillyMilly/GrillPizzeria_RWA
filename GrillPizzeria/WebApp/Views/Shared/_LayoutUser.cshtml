@@ -29,12 +29,11 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Početna</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Hrana" asp-action="Search">Hrana</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="KategorijaHrane" asp-action="Index">Kategorije</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Alergen" asp-action="Index">Alergeni</a></li>
                         @if (loggedIn)
                         {
-                            <li class="nav-item"><a class="nav-link" asp-controller="Korisnik" asp-action="KorisnikDetails">Profil</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Hrana" asp-action="Search">Hrana</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="KategorijaHrane" asp-action="Index">Kategorije</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Alergen" asp-action="Index">Alergeni</a></li>
                         }
                     </ul>
                     <ul class="navbar-nav">
@@ -44,6 +43,7 @@
                         }
                         else
                         {
+                            <li class="nav-item"><a class="nav-link" asp-controller="Korisnik" asp-action="KorisnikDetails">Profil</a></li>
                             <li class="nav-item"><a class="nav-link" asp-controller="Korisnik" asp-action="SignOut">Odjava (@username)</a></li>
                         }
                     </ul>

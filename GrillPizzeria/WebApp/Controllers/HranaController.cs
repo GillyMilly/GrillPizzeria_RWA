@@ -48,6 +48,7 @@ public class HranaController : Controller
             }).ToList();
     }
 
+    [Authorize]
     public async Task<ActionResult> Index()
     {
         try
@@ -62,6 +63,7 @@ public class HranaController : Controller
         }
     }
 
+    [Authorize]
     public ActionResult Details(int id)
     {
         try
@@ -78,7 +80,7 @@ public class HranaController : Controller
             var hranaVM = _mapper.Map<HranaVM>(hrana);
             hranaVM.AlergeniNazivi = hrana.HranaAlergens
                 .Where(ha => ha.Alergen != null)
-                .Select(ha => ha.Alergen.Naziv)
+                .Select(ha => ha.Alergen!.Naziv)
                 .ToList();
 
             return View(hranaVM);
@@ -89,6 +91,7 @@ public class HranaController : Controller
         }
     }
 
+    [Authorize]
     public ActionResult Search(SearchVM searchVM)
     {
         try
@@ -191,7 +194,7 @@ public class HranaController : Controller
             // Log action
             await _logRepository.AddLogAsync(new Log
             {
-                Timestamp = DateTime.UtcNow,
+                Timestamp = DateTime.Now,
                 Level = "Info",
                 Message = $"Hrana '{newFood.Naslov}' je kreirana (ID: {newFood.Idhrana})"
             });
@@ -224,7 +227,7 @@ public class HranaController : Controller
             var foodVm = _mapper.Map<HranaVM>(foodItem);
             foodVm.OdabraniAlergeni = foodItem.HranaAlergens
                 .Where(ha => ha.AlergenId.HasValue)
-                .Select(ha => ha.AlergenId.Value)
+                .Select(ha => ha.AlergenId!.Value)
                 .ToList();
             foodVm.AlergeniDdl = GetAlergenListItems();
             ViewBag.CategoryDdlItems = GetCategoryListItems();
@@ -328,7 +331,7 @@ public class HranaController : Controller
             // Log action
             await _logRepository.AddLogAsync(new Log
             {
-                Timestamp = DateTime.UtcNow,
+                Timestamp = DateTime.Now,
                 Level = "Info",
                 Message = $"Hrana '{hrana.Naslov}' je ažurirana (ID: {id})"
             });
@@ -384,7 +387,7 @@ public class HranaController : Controller
             // Log action
             await _logRepository.AddLogAsync(new Log
             {
-                Timestamp = DateTime.UtcNow,
+                Timestamp = DateTime.Now,
                 Level = "Warning",
                 Message = $"Hrana '{foodName}' je obrisana (ID: {id})"
             });
@@ -392,7 +395,7 @@ public class HranaController : Controller
             TempData["SuccessMessage"] = "Hrana je uspješno obrisana.";
             return RedirectToAction("Search");
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             ModelState.AddModelError("", "Greška pri brisanju hrane.");
             return View(hranaVM);

@@ -19,6 +19,7 @@ public class KategorijaHraneController : Controller
         _mapper = mapper;
     }
 
+    [Authorize]
     public ActionResult Index()
     {
         try
@@ -33,6 +34,7 @@ public class KategorijaHraneController : Controller
         }
     }
 
+    [Authorize]
     public ActionResult Details(int id)
     {
         try

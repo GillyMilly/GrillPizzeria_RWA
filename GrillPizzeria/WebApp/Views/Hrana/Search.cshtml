@@ -16,53 +16,44 @@
         <div class="alert alert-success">@TempData["SuccessMessage"]</div>
     }
 
-    <!-- Search and Filter Section (Image 7-8) -->
+    @if (isAdmin)
+    {
+        <div style="margin-bottom: 1.5rem;">
+            <a asp-action="Create" class="btn-add-item">Dodaj Hranu</a>
+        </div>
+    }
+
+    <!-- Search and Filter Section -->
     <div class="search-filter-section">
         <form asp-action="Search" method="get" id="searchForm">
             <input type="hidden" asp-for="Page" value="1" />
+            <input type="hidden" asp-for="PageSize" id="hiddenPageSize" value="@Model.PageSize" />
             <div class="search-filter-row">
                 <div class="search-input-group">
-                    <label asp-for="SearchTerm">Search text</label>
                     <input asp-for="SearchTerm" type="text" placeholder="Pretraži hranu..." />
                 </div>
                 <div class="filter-group">
-                    <label asp-for="KategorijaId">Category</label>
                     <select asp-for="KategorijaId" asp-items="ViewBag.Categories">
                         <option value="">Sve kategorije</option>
                     </select>
+                </div>
+                <div class="items-per-page">
+                    <select name="PageSize" id="pageSizeSelect">
+                        <option value="10" selected="@(Model.PageSize == 10)">10</option>
+                        <option value="25" selected="@(Model.PageSize == 25)">25</option>
+                        <option value="50" selected="@(Model.PageSize == 50)">50</option>
+                    </select>
+                    <span>Items</span>
                 </div>
                 <button type="submit" class="btn-search">Search</button>
             </div>
         </form>
     </div>
 
-    @if (isAdmin)
-    {
-        <div style="margin-bottom: 1.5rem;">
-            <a asp-action="Create" class="btn-add-item">Add Item</a>
-        </div>
-    }
-
     @if (Model.Hranas != null && Model.Hranas.Any())
     {
         <!-- List View (Image 7 - Variant 1) -->
         <div class="food-list-view">
-            <div class="list-controls" style="margin-bottom: 1rem;">
-                <form asp-action="Search" method="get" id="pageSizeForm">
-                    <input type="hidden" asp-for="SearchTerm" />
-                    <input type="hidden" asp-for="KategorijaId" />
-                    <input type="hidden" asp-for="Page" value="1" />
-                    <div class="items-per-page">
-                        <label>Show</label>
-                        <select name="PageSize" id="pageSizeSelect" onchange="document.getElementById('pageSizeForm').submit();">
-                            <option value="10" selected="@(Model.PageSize == 10)">10</option>
-                            <option value="25" selected="@(Model.PageSize == 25)">25</option>
-                            <option value="50" selected="@(Model.PageSize == 50)">50</option>
-                        </select>
-                        <label>Items</label>
-                    </div>
-                </form>
-            </div>
 
             @foreach (var item in Model.Hranas)
             {
@@ -76,7 +67,7 @@
                     <div class="food-item-actions">
                         @if (isAdmin)
                         {
-                            <button type="button" class="btn-delete-item" onclick="event.stopPropagation(); window.location.href='@Url.Action("Delete", "Hrana", new { id = item.Idhrana })'" title="Obriši">🗑️</button>
+                            <a asp-action="Delete" asp-route-id="@item.Idhrana" class="btn-delete" onclick="event.stopPropagation();" title="Obriši">Obriši</a>
                         }
                     </div>
                 </div>
@@ -106,3 +97,9 @@
         </div>
     }
 </div>
+
+<script>
+    document.getElementById('pageSizeSelect').addEventListener('change', function() {
+        document.getElementById('hiddenPageSize').value = this.value;
+    });
+</script>

@@ -14,30 +14,32 @@
         <form asp-action="KorisnikEdit" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Idkorisnik" />
+            <input type="hidden" asp-for="Username" />
+            <input type="hidden" asp-for="RolesId" />
 
             <div class="profile-form">
                 <div class="profile-form-group">
-                    <label>Username:</label>
-                    <input type="text" value="@Model.Username" readonly />
+                    <label for="username-display">Username:</label>
+                    <input id="username-display" name="username-display" type="text" value="@Model.Username" readonly autocomplete="username" />
                 </div>
                 <div class="profile-form-group">
                     <label asp-for="Email">E-mail:</label>
-                    <input asp-for="Email" type="email" />
+                    <input asp-for="Email" type="email" autocomplete="email" />
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
                 <div class="profile-form-group">
                     <label asp-for="Ime">First Name:</label>
-                    <input asp-for="Ime" type="text" />
+                    <input asp-for="Ime" type="text" autocomplete="given-name" />
                     <span asp-validation-for="Ime" class="text-danger"></span>
                 </div>
                 <div class="profile-form-group">
                     <label asp-for="Prezime">Last Name:</label>
-                    <input asp-for="Prezime" type="text" />
+                    <input asp-for="Prezime" type="text" autocomplete="family-name" />
                     <span asp-validation-for="Prezime" class="text-danger"></span>
                 </div>
                 <div class="profile-form-group">
                     <label asp-for="Mobitel">Phone:</label>
-                    <input asp-for="Mobitel" type="tel" />
+                    <input asp-for="Mobitel" type="tel" autocomplete="tel" />
                     <span asp-validation-for="Mobitel" class="text-danger"></span>
                 </div>
             </div>

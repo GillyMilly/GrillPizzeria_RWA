@@ -82,7 +82,7 @@ public class KorisnikController : Controller
         // Log action
         await _logRepository.AddLogAsync(new Log
         {
-            Timestamp = DateTime.UtcNow,
+            Timestamp = DateTime.Now,
             Level = "Info",
             Message = $"Korisnik '{existingUser.Username}' se prijavio (Role: {existingUser.Roles?.RolesName ?? "User"})"
         });
@@ -103,12 +103,15 @@ public class KorisnikController : Controller
         // Log action
         await _logRepository.AddLogAsync(new Log
         {
-            Timestamp = DateTime.UtcNow,
+            Timestamp = DateTime.Now,
             Level = "Info",
             Message = $"Korisnik '{username}' se odjavio"
         });
         
-        return View();
+        // Redirect to home page instead of showing view
+        // This ensures the layout is re-rendered with updated authentication state
+        TempData["SignOutMessage"] = "Uspješno ste se odjavili.";
+        return RedirectToAction("Index", "Home");
     }
 
     public IActionResult Register()
@@ -167,7 +170,7 @@ public class KorisnikController : Controller
             // Log action
             await _logRepository.AddLogAsync(new Log
             {
-                Timestamp = DateTime.UtcNow,
+                Timestamp = DateTime.Now,
                 Level = "Info",
                 Message = $"Novi korisnik '{korisnik.Username}' se registrirao (Email: {korisnik.Email})"
             });
@@ -228,7 +231,16 @@ public class KorisnikController : Controller
     public async Task<IActionResult> KorisnikEdit(int id, KorisnikVM userVm)
     {
         if (!ModelState.IsValid)
+        {
+            // Reload user data to ensure the view has all necessary data
+            var userDbReload = await _korisnikRepository.GetByIdAsync(id);
+            if (userDbReload != null)
+            {
+                userVm.Username = userDbReload.Username;
+                userVm.RolesId = userDbReload.RolesId;
+            }
             return View(userVm);
+        }
 
         try
         {
@@ -236,8 +248,21 @@ public class KorisnikController : Controller
             if (userDb == null)
                 return NotFound();
 
-            _mapper.Map(userVm, userDb);
-            await _korisnikRepository.UpdateKorisnikAsync(userDb);
+            // Create a new Korisnik entity with only the updatable fields
+            var updatedKorisnik = new Korisnik
+            {
+                Idkorisnik = userDb.Idkorisnik,
+                Username = userDb.Username, // Preserve original username
+                PwdHash = userDb.PwdHash, // Preserve password hash
+                Salt = userDb.Salt, // Preserve salt
+                RolesId = userDb.RolesId, // Preserve role
+                Ime = userVm.Ime,
+                Prezime = userVm.Prezime,
+                Email = userVm.Email,
+                Mobitel = userVm.Mobitel
+            };
+            
+            await _korisnikRepository.UpdateKorisnikAsync(updatedKorisnik);
 
             TempData["SuccessMessage"] = "Profil je uspješno ažuriran.";
             return RedirectToAction("KorisnikDetails");
@@ -245,6 +270,13 @@ public class KorisnikController : Controller
         catch (Exception ex)
         {
             ModelState.AddModelError("", $"Greška pri ažuriranju: {ex.Message}");
+            // Reload user data to ensure the view has all necessary data
+            var userDbReload = await _korisnikRepository.GetByIdAsync(id);
+            if (userDbReload != null)
+            {
+                userVm.Username = userDbReload.Username;
+                userVm.RolesId = userDbReload.RolesId;
+            }
             return View(userVm);
         }
     }
