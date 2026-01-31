@@ -19,16 +19,30 @@ public class LogController : ControllerBase
     }
 
     [HttpGet("get/{last}")]
-    public ActionResult<IEnumerable<LogDto>> GetLogs(int last = 10)
+    public ActionResult<IEnumerable<Log>> GetLogs(int last = 10)
     {
-        var logs = _logRepository.GetLogs(last);
-        return logs.Count > 0 ? Ok(logs) : NotFound("Nema pronađenih logova.");
+        try
+        {
+            var logs = _logRepository.GetLogs(last);
+            return logs.Count > 0 ? Ok(logs) : Ok(new List<Log>());
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, "Greška pri dohvaćanju zapisnika: " + ex.Message);
+        }
     }
 
     [HttpGet("count")]
-    public ActionResult<int> GetLogCount()
+    public ActionResult<object> GetLogCount()
     {
-        return Ok(new { Count = _logRepository.GetLogCount() });
+        try
+        {
+            return Ok(new { Count = _logRepository.GetLogCount() });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, "Greška pri dohvaćanju broja zapisa: " + ex.Message);
+        }
     }
 
     [HttpPost]

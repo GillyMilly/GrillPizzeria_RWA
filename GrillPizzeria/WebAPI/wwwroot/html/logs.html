@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Zapisnici – GrillPizzeria API</title>
+    <link rel="stylesheet" href="../css/spinner.css" />
+    <link rel="stylesheet" href="../css/logs.css" />
+</head>
+<body>
+    <div class="logs-container">
+        <h1>Zapisnici (logs)</h1>
+        <div class="toolbar">
+            <label for="logCount">Prikaži zadnjih:</label>
+            <select id="logCount">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+            </select>
+            <span id="totalCount"></span>
+            <button type="button" id="fetchLogs">Osvježi</button>
+            <button type="button" id="logout">Odjava</button>
+        </div>
+        <table id="logTable">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Vrijeme</th>
+                    <th>Razina</th>
+                    <th>Poruka</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <script src="../js/logs.js"></script>
+</body>
+</html>

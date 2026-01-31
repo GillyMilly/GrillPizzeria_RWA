@@ -50,56 +50,26 @@
         </form>
     </div>
 
-    @if (Model.Hranas != null && Model.Hranas.Any())
-    {
-        <!-- List View (Image 7 - Variant 1) -->
-        <div class="food-list-view">
-
-            @foreach (var item in Model.Hranas)
-            {
-                <div class="food-list-item" onclick="window.location.href='@Url.Action("Details", "Hrana", new { id = item.Idhrana })'">
-                    <div class="food-item-info">
-                        <div class="food-item-name">@Html.DisplayFor(modelItem => item.Naslov)</div>
-                        <div class="food-item-details">
-                            @Html.DisplayFor(modelItem => item.Cijena) | @Html.DisplayFor(modelItem => item.KategorijaNaziv)
-                        </div>
-                    </div>
-                    <div class="food-item-actions">
-                        @if (isAdmin)
-                        {
-                            <a asp-action="Delete" asp-route-id="@item.Idhrana" class="btn-delete" onclick="event.stopPropagation();" title="Obriši">Obriši</a>
-                        }
-                    </div>
-                </div>
-            }
-
-            @if (Model.LastPage > 1)
-            {
-                <div class="list-controls">
-                    <nav>
-                        <ul class="pagination">
-                            @for (int i = 1; i <= Model.LastPage; i++)
-                            {
-                                <li class="page-item @(i == Model.Page ? "active" : "")">
-                                    <a class="page-link" asp-action="Search" asp-route-page="@i" asp-route-searchTerm="@Model.SearchTerm" asp-route-kategorijaId="@Model.KategorijaId" asp-route-pageSize="@Model.PageSize">@i</a>
-                                </li>
-                            }
-                        </ul>
-                    </nav>
-                </div>
-            }
-        </div>
-    }
-    else
-    {
-        <div class="food-list-view">
-            <p style="text-align: center; padding: 2rem; color: #666;">Nema pronađenih rezultata.</p>
-        </div>
-    }
+    <div id="searchResultsContainer">
+        @await Html.PartialAsync("_SearchResults", Model)
+    </div>
 </div>
 
-<script>
-    document.getElementById('pageSizeSelect').addEventListener('change', function() {
-        document.getElementById('hiddenPageSize').value = this.value;
-    });
-</script>
+@section Scripts {
+    <script>
+        document.getElementById('pageSizeSelect').addEventListener('change', function () {
+            document.getElementById('hiddenPageSize').value = this.value;
+        });
+        $(document).on('click', '#searchResultsContainer .page-link-ajax', function (e) {
+            e.preventDefault();
+            var page = $(this).data('page');
+            if (!page) return;
+            var url = '@Url.Action("Search", "Hrana")' + '?page=' + page + '&searchTerm=' + encodeURIComponent($('#SearchTerm').val() || '') + '&kategorijaId=' + encodeURIComponent($('#KategorijaId').val() || '') + '&pageSize=' + ($('#pageSizeSelect').val() || 10) + '&partial=true';
+            $.get(url, function (html) {
+                $('#searchResultsContainer').html(html);
+            }).fail(function () {
+                $('#searchResultsContainer').html('<p style="text-align:center;color:#666;">Greška pri učitavanju.</p>');
+            });
+        });
+    </script>
+}

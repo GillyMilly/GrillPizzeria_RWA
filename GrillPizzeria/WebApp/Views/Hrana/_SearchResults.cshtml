@@ -1,0 +1,63 @@
+@model WebApp.ViewModels.SearchVM
+@{
+    var isAdmin = User.IsInRole("Admin");
+    int startPage = Math.Max(1, Model.Page - 2);
+    int endPage = Math.Min(Model.LastPage, Model.Page + 2);
+}
+
+@if (Model.Hranas != null && Model.Hranas.Any())
+{
+    <div class="food-list-view">
+        @foreach (var item in Model.Hranas)
+        {
+            <div class="food-list-item" onclick="window.location.href='@Url.Action("Details", "Hrana", new { id = item.Idhrana })'">
+                <div class="food-item-info">
+                    <div class="food-item-name">@Html.DisplayFor(modelItem => item.Naslov)</div>
+                    <div class="food-item-details">
+                        @Html.DisplayFor(modelItem => item.Cijena) | @Html.DisplayFor(modelItem => item.KategorijaNaziv)
+                    </div>
+                </div>
+                <div class="food-item-actions">
+                    @if (isAdmin)
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.Idhrana" class="btn-delete" onclick="event.stopPropagation();" title="Obriši">Obriši</a>
+                    }
+                </div>
+            </div>
+        }
+
+        @if (Model.LastPage > 1)
+        {
+            <div class="list-controls">
+                <nav>
+                    <ul class="pagination">
+                        @if (Model.Page > 1)
+                        {
+                            <li class="page-item">
+                                <a href="#" class="page-link page-link-ajax" data-page="@(Model.Page - 1)" aria-label="Previous">Previous</a>
+                            </li>
+                        }
+                        @for (int i = startPage; i <= endPage; i++)
+                        {
+                            <li class="page-item @(i == Model.Page ? "active" : "")">
+                                <a href="#" class="page-link page-link-ajax" data-page="@i">@i</a>
+                            </li>
+                        }
+                        @if (Model.Page < Model.LastPage)
+                        {
+                            <li class="page-item">
+                                <a href="#" class="page-link page-link-ajax" data-page="@(Model.Page + 1)" aria-label="Next">Next</a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="food-list-view">
+        <p style="text-align: center; padding: 2rem; color: #666;">Nema pronađenih rezultata.</p>
+    </div>
+}

@@ -92,42 +92,42 @@ public class HranaController : Controller
     }
 
     [Authorize]
-    public ActionResult Search(SearchVM searchVM)
+    public ActionResult Search(SearchVM searchVM, bool partial = false)
     {
         try
         {
             if (searchVM.Page < 1) searchVM.Page = 1;
             if (searchVM.PageSize < 1) searchVM.PageSize = 10;
 
-            IQueryable<Hrana> foodItems = _context.Hranas.Include(x => x.KategorijaHrane);
+            IQueryable<Hrana> query = _context.Hranas.Include(x => x.KategorijaHrane);
 
             if (!string.IsNullOrEmpty(searchVM.SearchTerm))
-            {
-                foodItems = foodItems.Where(x => x.Naslov.Contains(searchVM.SearchTerm));
-            }
+                query = query.Where(x => x.Naslov.Contains(searchVM.SearchTerm));
 
             if (searchVM.KategorijaId.HasValue)
-            {
-                foodItems = foodItems.Where(x => x.KategorijaHraneId == searchVM.KategorijaId.Value);
-            }
+                query = query.Where(x => x.KategorijaHraneId == searchVM.KategorijaId.Value);
 
-            var filteredCount = foodItems.Count();
-            var items = foodItems
+            var totalCount = query.Count();
+            var items = query
                 .OrderBy(x => x.Naslov)
                 .Skip((searchVM.Page - 1) * searchVM.PageSize)
                 .Take(searchVM.PageSize)
                 .ToList();
 
-            var hranaVms = _mapper.Map<List<HranaVM>>(items);
-            searchVM.Hranas = hranaVms;
-            searchVM.TotalCount = filteredCount;
-            searchVM.LastPage = (int)Math.Ceiling((double)filteredCount / searchVM.PageSize);
+            searchVM.Hranas = _mapper.Map<List<HranaVM>>(items);
+            searchVM.TotalCount = totalCount;
+            searchVM.LastPage = (int)Math.Ceiling((double)totalCount / searchVM.PageSize);
+
+            if (partial)
+                return PartialView("_SearchResults", searchVM);
 
             ViewBag.Categories = GetCategoryListItems();
             return View(searchVM);
         }
         catch (Exception ex)
         {
+            if (partial)
+                return PartialView("_SearchResults", new SearchVM { Hranas = new List<HranaVM>() });
             return View("Error", new ErrorViewModel { RequestId = ex.Message });
         }
     }
@@ -258,8 +258,7 @@ public class HranaController : Controller
             if (hrana == null)
                 return NotFound();
 
-            // Preserve existing values if not provided or empty in the form
-            // This prevents overwriting existing data when only updating image
+            // Keep existing values if not provided or empty in the form (prevents from overwriting data when updating)
             if (!vm.Cijena.HasValue || vm.Cijena.Value == 0)
             {
                 vm.Cijena = hrana.Cijena;

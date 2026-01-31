@@ -144,19 +144,15 @@
 
 .entity-details-item {
     margin-bottom: 1.5rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid #eee;
 }
 
-.entity-details-item:last-child {
-    border-bottom: none;
+.entity-details-item:last-of-type {
     margin-bottom: 0;
-    padding-bottom: 0;
 }
 
 .entity-details-label {
-    font-weight: 600;
-    color: #555;
+    font-weight: bold;
+    color: #333;
     margin-bottom: 0.5rem;
     display: block;
 }
@@ -171,7 +167,6 @@
     gap: 1rem;
     margin-top: 2rem;
     padding-top: 2rem;
-    border-top: 1px solid #dee2e6;
 }
 
 /* Shared button styles */

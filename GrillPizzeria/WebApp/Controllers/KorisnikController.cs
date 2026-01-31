@@ -48,6 +48,8 @@ public class KorisnikController : Controller
         if (!ModelState.IsValid)
             return View(signInVm);
 
+        try
+        {
         var existingUser = await _context.Korisniks
             .Include(x => x.Roles)
             .FirstOrDefaultAsync(x => x.Username == signInVm.EmailOrUsername || x.Email == signInVm.EmailOrUsername);
@@ -93,6 +95,12 @@ public class KorisnikController : Controller
             return RedirectToAction("Index", "Home");
         else
             return RedirectToAction("Index", "Home");
+        }
+        catch (Exception)
+        {
+            ModelState.AddModelError("", "Greška pri povezivanju s bazom. Provjerite je li SQL Server pokrenut.");
+            return View(signInVm);
+        }
     }
 
     public new async Task<IActionResult> SignOut()
@@ -232,7 +240,6 @@ public class KorisnikController : Controller
     {
         if (!ModelState.IsValid)
         {
-            // Reload user data to ensure the view has all necessary data
             var userDbReload = await _korisnikRepository.GetByIdAsync(id);
             if (userDbReload != null)
             {
@@ -241,36 +248,28 @@ public class KorisnikController : Controller
             }
             return View(userVm);
         }
-
         try
         {
             var userDb = await _korisnikRepository.GetByIdAsync(id);
             if (userDb == null)
                 return NotFound();
-
-            // Create a new Korisnik entity with only the updatable fields
-            var updatedKorisnik = new Korisnik
+            userDb.Ime = userVm.Ime;
+            userDb.Prezime = userVm.Prezime;
+            userDb.Email = userVm.Email;
+            userDb.Mobitel = userVm.Mobitel;
+            await _korisnikRepository.UpdateKorisnikAsync(userDb);
+            await _logRepository.AddLogAsync(new Log
             {
-                Idkorisnik = userDb.Idkorisnik,
-                Username = userDb.Username, // Preserve original username
-                PwdHash = userDb.PwdHash, // Preserve password hash
-                Salt = userDb.Salt, // Preserve salt
-                RolesId = userDb.RolesId, // Preserve role
-                Ime = userVm.Ime,
-                Prezime = userVm.Prezime,
-                Email = userVm.Email,
-                Mobitel = userVm.Mobitel
-            };
-            
-            await _korisnikRepository.UpdateKorisnikAsync(updatedKorisnik);
-
+                Timestamp = DateTime.Now,
+                Level = "Info",
+                Message = $"Korisnik '{userDb.Username}' je ažurirao svoj profil."
+            });
             TempData["SuccessMessage"] = "Profil je uspješno ažuriran.";
             return RedirectToAction("KorisnikDetails");
         }
         catch (Exception ex)
         {
             ModelState.AddModelError("", $"Greška pri ažuriranju: {ex.Message}");
-            // Reload user data to ensure the view has all necessary data
             var userDbReload = await _korisnikRepository.GetByIdAsync(id);
             if (userDbReload != null)
             {

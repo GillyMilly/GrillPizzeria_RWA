@@ -14,12 +14,14 @@ public class KorisnikController : ControllerBase
     private readonly IConfiguration _configuration;
     private readonly GrillPizzeriaDbContext _context;
     private readonly KorisnikRepository _korisnikRepository;
+    private readonly LogRepository _logRepository;
 
-    public KorisnikController(IConfiguration configuration, GrillPizzeriaDbContext context, KorisnikRepository korisnikRepository)
+    public KorisnikController(IConfiguration configuration, GrillPizzeriaDbContext context, KorisnikRepository korisnikRepository, LogRepository logRepository)
     {
         _configuration = configuration;
         _context = context;
         _korisnikRepository = korisnikRepository;
+        _logRepository = logRepository;
     }
 
     [HttpPost("register")]
@@ -59,6 +61,13 @@ public class KorisnikController : ControllerBase
             };
 
             await _korisnikRepository.AddKorisnikAsync(user);
+
+            await _logRepository.AddLogAsync(new Log
+            {
+                Timestamp = DateTime.UtcNow,
+                Level = "Info",
+                Message = $"Novi korisnik '{user.Username}' se registrirao (API)."
+            });
 
             return Ok(new { message = "Korisnik je uspješno registriran.", id = user.Idkorisnik });
         }
@@ -129,6 +138,13 @@ public class KorisnikController : ControllerBase
 
             korisnik.RolesId = promoteDto.RolesId;
             await _context.SaveChangesAsync();
+
+            await _logRepository.AddLogAsync(new Log
+            {
+                Timestamp = DateTime.UtcNow,
+                Level = "Info",
+                Message = $"Uloga korisnika '{promoteDto.Username}' promijenjena na '{role.RolesName}' (API)."
+            });
 
             return Ok(new
             {

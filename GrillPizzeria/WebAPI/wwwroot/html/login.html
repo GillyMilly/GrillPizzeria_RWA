@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prijava – GrillPizzeria API</title>
+    <link rel="stylesheet" href="../css/spinner.css" />
+    <link rel="stylesheet" href="../css/login.css" />
+</head>
+<body>
+    <div class="login-container">
+        <h1>Prijava</h1>
+        <label for="emailOrUsername">Korisničko ime ili e-mail</label>
+        <input type="text" id="emailOrUsername" placeholder="Unesite korisničko ime ili e-mail" required />
+
+        <label for="password">Lozinka</label>
+        <input type="password" id="password" placeholder="Unesite lozinku" required />
+
+        <button id="login-button" type="button">Prijava <span id="spinner-placeholder"></span></button>
+        <p><a href="register.html">Registracija novog korisnika</a></p>
+    </div>
+    <script src="../js/login.js"></script>
+</body>
+</html>
